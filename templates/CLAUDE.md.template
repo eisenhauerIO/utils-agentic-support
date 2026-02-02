@@ -1,0 +1,95 @@
+# Project Memory - [PROJECT_NAME]
+
+> eisenhauerIO: We develop causal thinking and build tools to improve decisions at scale.
+
+## Project Purpose
+
+[DESCRIBE THE PROJECT'S PURPOSE AND MAIN FUNCTIONALITY]
+
+## Key Files
+
+| File/Directory | Purpose |
+|----------------|---------|
+| [ADD KEY FILES] | [DESCRIPTION] |
+
+## Architecture
+
+[DESCRIBE THE PROJECT'S ARCHITECTURE AND MAIN COMPONENTS]
+
+---
+
+## Coding Standards
+
+Reference: `.agentic/standards/coding/`
+
+### Python
+- **Version**: Python 3.11+
+- **Build**: Hatch / Hatchling
+- **Formatter**: Ruff (replaces black, isort, flake8)
+- **Testing**: pytest
+- **Type hints**: Required for all functions
+- **Docstrings**: Google-style
+- **Naming**: snake_case for functions/variables, PascalCase for classes
+
+### General
+- Indentation: 4 spaces
+- Max line length: 120 characters
+- Error handling: Try-except with logging
+- Prefer pandas for data manipulation
+
+## Common Workflows
+
+### Git Workflow
+- Follow GitHub Flow (feature branches from main)
+- Use Conventional Commits format:
+  - `feat:` new feature
+  - `fix:` bug fix
+  - `docs:` documentation
+  - `refactor:` code refactoring
+  - `test:` adding tests
+  - `chore:` maintenance
+
+### Testing
+- Run tests: `pytest`
+- Run with coverage: `pytest --cov`
+- Always run tests before committing
+
+### Code Quality
+- Format: `ruff format .`
+- Lint: `ruff check .`
+- Fix: `ruff check --fix .`
+
+---
+
+## Domain Context
+
+### Causal Inference
+- Distinguish between correlation and causation
+- Document identifying assumptions explicitly
+- Prefer potential outcomes framework notation
+- Reference relevant econometric methodology
+
+### Data Handling
+- Use artifact-store for file I/O when available
+- Support both local and S3 storage patterns
+- Prefer Parquet for data files, YAML for configs
+
+---
+
+## Known Pitfalls
+
+<!-- Add corrections here as you encounter issues -->
+<!-- Example: "When creating pytest fixtures, always use scope='function' unless shared state is explicitly needed" -->
+
+---
+
+## Verification
+
+Before completing any task:
+1. Run the test suite if tests exist
+2. Run linter to check for issues
+3. Verify changes work as expected
+
+---
+
+*Update this file whenever Claude makes a mistake: "Update CLAUDE.md so you don't make that mistake again"*
