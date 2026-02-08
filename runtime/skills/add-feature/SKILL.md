@@ -1,6 +1,6 @@
 ---
 name: add-feature
-description: Scaffold a new feature following project-specific patterns. Reads feature-type instructions from .claude/skills/feature-types/ to handle different feature types (e.g., model, transform).
+description: Execute a feature workflow (add, refactor, etc.) following project-specific or shared feature-type patterns from .claude/skills/feature-types/.
 argument-hint: [feature-type] [feature-name-in-snake-case]
 allowed-tools: Read, Grep, Write, Edit, Bash, Glob
 ---
@@ -20,24 +20,28 @@ If only one argument is provided, treat it as `FEATURE_NAME` and ask the user fo
 
 ## Step 1: Load feature-type instructions
 
-Read the feature-type instruction file at:
+Look for the feature-type instruction file in two locations (in order of precedence):
 
-```
-.claude/skills/feature-types/{FEATURE_TYPE}.md
-```
+1. `.claude/skills/feature-types/{FEATURE_TYPE}.md` (project-specific, takes precedence)
+2. `.claude/general-skills/add-feature/feature-types/{FEATURE_TYPE}.md` (shared fallback)
 
-If the file does not exist, inform the user that no instructions are available for feature type `{FEATURE_TYPE}` and list the available feature types by checking which `.md` files exist in `.claude/skills/feature-types/`. Then stop.
+If neither file exists, inform the user that no instructions are available for feature type `{FEATURE_TYPE}` and list the available feature types by checking which `.md` files exist in both locations. Then stop.
 
 The feature-type file defines these sections (all optional — skip any that are absent):
 
 | Section | Purpose |
 |---|---|
+| `## Git` | Override branch prefix and verb (defaults: `branch_prefix: add`, `verb: Add`) |
 | `## Naming` | How to derive class names, directory paths, registry keys, etc. from `FEATURE_NAME` |
 | `## Requirements` | Questions to ask the user before writing code |
 | `## References` | Files to read for style and pattern matching |
 | `## Plan` | What the implementation plan should cover |
 | `## Implementation` | Specific files to create and modify |
 | `## Verification` | Feature-type-specific checklist items |
+
+If the feature-type file contains a `## Git` section, extract `branch_prefix` and `verb` from it. Otherwise, use these defaults:
+- `branch_prefix`: `add`
+- `verb`: `Add`
 
 Follow all instructions from the feature-type file within the workflow stages below.
 
@@ -81,12 +85,12 @@ Follow the `## Implementation` section from the feature-type file. Create all sp
 All work must be done on a feature branch, not on `main`.
 
 ```bash
-git checkout -b add-{FEATURE_TYPE}-{FEATURE_NAME}
+git checkout -b {branch_prefix}-{FEATURE_TYPE}-{FEATURE_NAME}
 ```
 
 Commit all new and modified files with a descriptive message:
 ```bash
-git commit -m "Add {FEATURE_NAME} {FEATURE_TYPE}"
+git commit -m "{verb} {FEATURE_NAME} {FEATURE_TYPE}"
 ```
 
 ## Step 8: Run tests and lint
@@ -100,10 +104,10 @@ Fix any failures before proceeding.
 Push the branch and create a PR targeting `main`:
 
 ```bash
-git push -u origin add-{FEATURE_TYPE}-{FEATURE_NAME}
-gh pr create --title "Add {FEATURE_NAME} {FEATURE_TYPE}" --body "$(cat <<'EOF'
+git push -u origin {branch_prefix}-{FEATURE_TYPE}-{FEATURE_NAME}
+gh pr create --title "{verb} {FEATURE_NAME} {FEATURE_TYPE}" --body "$(cat <<'EOF'
 ## Summary
-- New {FEATURE_TYPE}: `{FEATURE_NAME}`
+- {verb} {FEATURE_TYPE}: `{FEATURE_NAME}`
 - {Brief description from the plan}
 
 ## Test plan
